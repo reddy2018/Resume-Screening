@@ -1,20 +1,25 @@
-import os
-import re
-import streamlit as st
-from dotenv import load_dotenv
+import os #read environment variables
+import re # extract percentage score using regex
+import streamlit as st # build UI (buttons, text boxes)
+from dotenv import load_dotenv # load .env file safely
 import google.generativeai as genai
 #from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings # converts text into numbers (vectors)
 from langchain_community.vectorstores import Chroma
+#Chroma is a vector database
+#Stores AI outputs so we can search or reuse later
 from langchain_community.document_loaders import PyPDFLoader, Docx2txtLoader, TextLoader
+# Reads PDF / DOCX / TXT resumes and extracts text
 #from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+#Breaks large text into smaller chunks
+# Important because LLMs work better with chunks
 
 #from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.prompts import PromptTemplate
-from langchain_core.runnables import RunnableLambda, RunnableMap
-from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import PromptTemplate # structured prompt
+from langchain_core.runnables import RunnableLambda, RunnableMap # passes multiple inputs
+from langchain_core.output_parsers import StrOutputParser # extracts clean text output
 
 
 # load environment variables
@@ -34,10 +39,16 @@ if not OPENAI_API_KEY:
 # genai.configure(api_key=GOOGLE_API_KEY)
 
 # setup embedding model
+# A way to convert text into numbers so AI can store and search meaning, not keywords.
 #embedding_model = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 embedding_model = OpenAIEmbeddings(model="text-embedding-3-small")
 
 # create or load chroma vector store
+# Creates a local vector database
+
+# Saves embeddings to disk
+
+# Data persists even after app restart
 VECTOR_STORE_DIR = "chroma_store"
 
 if os.path.exists(VECTOR_STORE_DIR):
